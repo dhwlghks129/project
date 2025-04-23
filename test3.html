@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IDIOT CRASHERS | HEXAGON</title>
+  <style>
+    /* 기본 스타일 생략 (원래 코드 유지) */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: Arial, sans-serif; background-color: #1b1b1b; color: #1b1b1b; }
+    a { color: #66c0f4; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+
+    header { text-align: center; padding: 20px 0; }
+    header .logo { font-size: 2em; font-weight: bold; }
+    nav ul { list-style: none; display: inline-flex; gap: 20px; }
+    nav a { font-size: 0.9em; text-transform: uppercase; }
+
+    .game-banner { position: relative; text-align: center; margin-bottom: 200px;  /* 추가: 배너와 갤러리 간격 */ }
+    .game-banner img { width: 100%; height: auto; display: block; }
+    .game-banner .banner-text {
+      position: absolute;
+      top: 50%; left: 50%; transform: translate(-50%, -50%);
+      text-align: center;
+    }
+    .game-banner .title {
+      font-size: 3em; font-weight: bold; color: #ffffff;
+      text-shadow: 2px 2px 8px rgba(0,0,0,0.7);
+      margin-bottom: 0.1em;
+    }
+    .game-banner .tagline {
+      font-size: 1.2em; color: #e5e5e5;
+      text-shadow: 1px 1px 6px rgba(0,0,0,0.5);
+    }
+
+    .screenshots {
+        margin: 60px 0;
+        display: flex;
+        flex-direction: column;
+        gap: 50px;
+        align-items: center;
+        flex-shrink: 0;
+    }
+    .screenshots img {
+        width: auto;
+        height: auto;
+        max-height: 400px;
+        max-width: 90%;
+        border-radius: 4px;
+    }
+
+    .description {
+      max-width: 800px;
+      margin: 0 auto 60px;
+      text-align: center;
+      line-height: 1.6;
+    }
+    .description h2, .description p {
+      margin-bottom: 1em;
+    }
+
+    .cta-button {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 4px;
+      background-color: #66c0f4;
+      color: #1b1b1b;
+      font-weight: bold;
+      text-transform: uppercase;
+      cursor: pointer;
+    }
+    .cta-button:hover { background-color: #5aaedb; }
+
+    footer { text-align: center; padding: 20px 0; font-size: 0.8em; color: #8f98a0; }
+
+    /* 알림창 */
+    .alert-box {
+      display: none;
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background-color: #4CAF50;
+      color: white;
+      padding: 15px 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+      z-index: 9999;
+    }
+
+    /* 팝업 */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+    }
+    .modal {
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      width: 300px;
+      max-width: 90%;
+      text-align: center;
+      position: relative;
+    }
+    .modal button.close-btn {
+      position: absolute;
+      top: 10px; right: 10px;
+      background: none;
+      border: none;
+      font-size: 20px;
+      cursor: pointer;
+    }
+    .about {
+        color: #e5e5e5
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <img class="logo" src="team_name.png">
+    <nav>
+      <ul>
+        <li><a href="#home">홈</a></li>
+        <li><a>|</a></li>
+        <li><a href="#screenshots">스크린샷</a></li>
+        <li><a>|</a></li>
+        <li><a href="#about">소개</a></li>
+        <li><a>|</a></li>
+        <li><a href="#" onclick="openModal()">문의</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <div class="container">
+    <!-- 게임 배너 -->
+    <section id="home" class="game-banner">
+      <div class="banner-text">
+        <div class="title">IDIOT CRASHERS</div>
+        <div class="tagline">"FUEL THE FUN NOW"</div>
+      </div>
+    </section>
+
+    <!-- 스크린샷 갤러리 -->
+    <section id="screenshots">
+      <div class="screenshots">
+        <img src="logo1.png" alt="팀로고">
+        <img src="in_game.png" alt="인 게임 스샷">
+      </div>
+    </section>
+
+    <!-- 게임 소개 -->
+    <section id="about" class="description">
+      <h2>게임 소개</h2>
+      <p>여기에 게임의 핵심 특징과 간략한 스토리를 위치시킵니다. 플레이어에게 매력적인 요소를 강조하세요.</p>
+      <button class="cta-button" onclick="showAlert()">지금 구매하기</button>
+    </section>
+  </div>
+
+  <!-- 알림창 -->
+  <div id="alertBox" class="alert-box">구매가 완료되었습니다!</div>
+
+  <!-- 알림창: 요청 접수 -->
+  <div id="inquiryAlert" class="alert-box" style="background-color: #2196F3;">요청이 접수되었습니다!</div>
+
+
+  <!-- 팝업 모달 -->
+  <div id="modalOverlay" class="modal-overlay">
+    <div class="modal">
+      <button class="close-btn" onclick="closeModal()">×</button>
+      <h3>문의하기</h3>
+      <p>궁금한 점이 있으신가요?<br>문의 내용을 작성해 주세요.</p>
+      <textarea rows="4" style="width: 100%; margin-top: 10px;"></textarea><br>
+      <button class="cta-button" style="margin-top: 10px;" onclick="submitInquiry()">보내기</button>
+    </div>
+  </div>
+
+  <footer>
+    <p>&copy; 2025 <span>HEXAGON</span>. All rights reserved.</p>
+  </footer>
+
+  <script>
+    function showAlert() {
+      const alertBox = document.getElementById('alertBox');
+      alertBox.style.display = 'block';
+  
+      setTimeout(() => {
+        alertBox.style.display = 'none';
+      }, 3000);
+    }
+  
+    function openModal() {
+      document.getElementById('modalOverlay').style.display = 'flex';
+    }
+  
+    function closeModal() {
+      document.getElementById('modalOverlay').style.display = 'none';
+    }
+  
+    function submitInquiry() {
+      closeModal(); // 모달 닫기
+  
+      const inquiryAlert = document.getElementById('inquiryAlert');
+      inquiryAlert.style.display = 'block'; // 알림 보이기
+  
+      setTimeout(() => {
+        inquiryAlert.style.display = 'none';
+      }, 3000); // 3초 후 사라짐
+    }
+  </script>  
+</body>
+</html>
